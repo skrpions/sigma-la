@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sigma</title>
+
+    <!-- BOOTSTRAP CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- CSS PERSONALIZADO-->
+    <link rel="stylesheet" href="css/style-final.css">
+</head>
+
+<body>
+    <header class="container">
+        <div class="row">
+            <div class="col-sm-12 ">
+                <img src="img/sigma-logo.png" class="logo">
+                <h3 class="text-center  font-weight-bold ">Prueba de desarrollo Sigma</h3>
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <p class="text-center text-descripcion">Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Cumque, laborum! Officiis ab ipsam molestias
+                            inventore facere, veniam enim magni est! Sequi blanditiis corporis dicta molestias, iusto
+                            consequatur sapiente est ullam.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <img src="img/sigma-image.png" class="img-formulario">
+            </div>
+
+
+            <div class="col-sm-6">
+
+                <div class="col-12 col-sm-2 col-md-10">
+
+                    <!-- Start :: Formulario -->
+                    <form class="shadow">
+                        <!-- Departamento -->
+                        <div class="form-group">
+                            <label for="departamento">Departamento*</label>
+                            <select class="form-control" id="departamento" ng-model="ciudades"
+                                ng-options="departamento for (departamento, ciudades) in departamentos">
+                                <option value=''>Seleccione Departamento</option>
+                            </select>
+                        </div>
+
+                        <!-- Ciudad -->
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad*</label>
+                            <select class="form-control" id="ciudad" ng-disabled="!ciudades" ng-model="ciudad">
+                                <option value=''>Seleccione Ciudad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Nombre*</label>
+                            <input type="email" class="form-control" id="nombre" placeholder="Pepito de Jesús">
+                        </div>
+                        <div class="form-group">
+                            <label for="correo">Correo*</label>
+                            <input type="email" class="form-control" id="correo" placeholder="Pepitodejesus@gmail.com">
+                        </div>
+                        <button name="enviar" type="submit" class="btn">Enviar</button>
+                    </form>
+                    <!-- End :: Formulario -->
+
+                </div>
+                <br>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        function departamentosList($scope) {
+            $scope.departamentos = {
+                'BMW': {
+                    'M SERIES': ['M3 SEDAN', 'COUPE', 'M5 SEDAN', 'X5'],
+                    '7 SERIES': ['730LD DESING', '732 M SPORT'],
+                    '8 SERIES': ['830LD DESING', '832 M SPORT'],
+                    '9 SERIES': ['930LD DESING', '932 M SPORT']
+                },
+                'JAGUAR': {
+                    'F TYPE': ['COUPE', 'VB S', 'R MINI'],
+                    'XF': ['X COUPE', 'PLUS', 'HILUX'],
+                    'X3': ['GRNA', 'ZTX', 'BLINDA'],
+                }
+            };
+        }
+    </script>
+
+</body>
+
+</html>
