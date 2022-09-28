@@ -1,3 +1,4 @@
+import { ContactoService } from './../../Servicios/contacto.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -21,9 +22,9 @@ export class FormularioComponent implements OnInit {
     public cities: string[] = [];
 
     constructor(
-        private http: HttpClient,
         private formBuilder: FormBuilder,
-        private _departamentosSvc: DepartamentosService
+        private _departamentosSvc: DepartamentosService,
+        private _contactoSvc: ContactoService
     ) {
         this.buildForm();
     }
@@ -32,16 +33,12 @@ export class FormularioComponent implements OnInit {
 
         this.formulario = this.formBuilder.group
             ({
-                department: ['', [Validators.required]],
-                city: ['', [Validators.required]],
+                department: ['', [Validators.required, Validators.maxLength(30)]],
+                city: ['', [Validators.required, Validators.maxLength(50)]],
                 name: ['', [Validators.required, Validators.maxLength(50)]],
-                email: ['', [Validators.required, Validators.email]]
+                email: ['', [Validators.required, Validators.maxLength(30), Validators.email]]
             });
 
-        this.formulario.valueChanges
-            .subscribe(value => {
-                console.log(value);
-            });
     }
 
     ngOnInit(): void {
@@ -84,11 +81,15 @@ export class FormularioComponent implements OnInit {
 
     public changeDepartment(department: string): void {
 
-        console.log('depts in change: ', department);
-
         try {
 
-            this.cities = this.departments.find(elemento => elemento.Departamento === department).Ciudades;
+            department === ''
+                ?
+                (
+                    this.formulario.get('city')?.reset(''),
+                    this.cities = []
+                )
+                : this.cities = this.departments.find(elemento => elemento.Departamento === department).Ciudades;
 
         } catch (error) {
             console.log('Error: ', error);
@@ -96,35 +97,40 @@ export class FormularioComponent implements OnInit {
     }
 
     public send(event: Event): void {
+
         // Cancelo el refresh nativo de html de toda la página
         event.preventDefault();
 
-
-        // Pregunto si el formulario es válido
         if (this.formulario.valid) {
-            const url_post = 'http://localhost:3002/contacto/create';
 
             // Obtenfo todos valores del formulario
-            const valores = this.formulario.value;
-            this.http.post(url_post, valores)
-                .subscribe((result) => {
-                    console.warn("result", result)
-                })
-            console.warn(valores);
+            const contacto = this.formulario.value;
 
-            // Animación de Confirmación
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Datos Almacenados Exitosamente!',
-                showConfirmButton: false,
-                timer: 2200
-            })
+            this._contactoSvc.create(contacto).subscribe((response: any) => {
+
+                // Condicional de corto circuito
+                response.success === true && this.sweetAlert();
+
+            });
 
         } else {
             // Activo todos los errores en el formulario
             this.formulario.markAllAsTouched();
         }
+
+    }
+
+    sweetAlert(): void {
+
+        // Animación de Confirmación
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Datos Almacenados Exitosamente!',
+            showConfirmButton: false,
+            timer: 2200
+        });
+
     }
 
     // - Recuper los campos para que no sea tan repetitiva el llamado a dichos campos cuando trabaje con los errores
