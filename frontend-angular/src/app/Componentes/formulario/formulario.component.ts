@@ -54,9 +54,7 @@ export class FormularioComponent implements OnInit {
             // Consumo de API REST :: Obtengo los datos de la url 
             this._departamentosSvc.getDepartamentos().subscribe(Departments => {
 
-                let allDepartaments = Departments;
-
-                this.loadDepartments(Object.entries(allDepartaments));
+                this.loadDepartments(Object.entries(Departments));
 
             });
 
