@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // debounceTime sirve para reaccionar después de un tiempo de inactividad dentro del formulario
 import { HttpClient } from '@angular/common/http';
+import { DepartamentosService } from '../../Servicios/departamentos.service';
 
 // Animación de SweetAlert2
 import Swal from 'sweetalert2';
-import { DepartamentosService } from '../../Servicios/departamentos.service';
 
 
 @Component({
@@ -16,36 +16,23 @@ import { DepartamentosService } from '../../Servicios/departamentos.service';
 })
 export class FormularioComponent implements OnInit {
 
-    // Declaro una instancia para controlar todo el formulario
-    formulario: FormGroup;
-    public departamentos = [{}];
-
-    // Variable para recibir todo el contenido del Json
-    conversion: any;
-
-    // Declaro 2 array, uno para los departamentos y otro para las ciudades que vendrán del json
-    public states: any[] = [{}];
+    public formulario: FormGroup;
+    public departments: any[] = [];
     public cities: string[] = [];
-
-
 
     constructor(
         private http: HttpClient,
         private formBuilder: FormBuilder,
         private _departamentosSvc: DepartamentosService
     ) {
-        // Inicialización inmediata  :: ngOnInit se usa frecuentemente para haer peticiones de datos 
         this.buildForm();
     }
 
-    // Hago una instancia del formulario y dentro de un objeto con clave : valor
-    // Hay 2 parámetros, el primero es un valor inicial y el segundo un array de validaciones
     private buildForm() {
 
-        // Declaro la validacion del Formulario
         this.formulario = this.formBuilder.group
             ({
-                state: ['', [Validators.required]],
+                department: ['', [Validators.required]],
                 city: ['', [Validators.required]],
                 name: ['', [Validators.required, Validators.maxLength(50)]],
                 email: ['', [Validators.required, Validators.email]]
@@ -54,36 +41,25 @@ export class FormularioComponent implements OnInit {
         this.formulario.valueChanges
             .subscribe(value => {
                 console.log(value);
-
-                if (value.state === '') {
-                    this.formulario.get('city').reset;
-
-                }
             });
-    }
-
-    // Limpieza de Código
-    // - Recuper los campos para que no sea tan repetitiva el llamado a dichos campos cuando trabaje con los errores
-    get stateField() {
-        return this.formulario.get('state');
-    }
-    get cityField() {
-        return this.formulario.get('city');
-    }
-    get nameField() {
-        return this.formulario.get('name');
-    }
-    get emailField() {
-        return this.formulario.get('email');
     }
 
     ngOnInit(): void {
+
+        this.getDepartments();
+
+    }
+
+    private getDepartments(): void {
+
         try {
 
             // Consumo de API REST :: Obtengo los datos de la url 
-            this._departamentosSvc.getDepartamentos().subscribe(Departamentos => {
+            this._departamentosSvc.getDepartamentos().subscribe(Departments => {
 
-                this.llenarDepartamentos(Object.entries(Departamentos));
+                let allDepartaments = Departments;
+
+                this.loadDepartments(Object.entries(allDepartaments));
 
             });
 
@@ -93,39 +69,33 @@ export class FormularioComponent implements OnInit {
 
     }
 
-    private llenarDepartamentos(departamentos: any): void {
-        //console.log('Departamentos & Ciudades: ', departamentos);
+    private loadDepartments(allDepartments: any): void {
 
-        for (const departamento of departamentos) {
+        allDepartments.map((department: any) => {
 
-            this.departamentos.push({
-                Departamento: departamento[0],
-                Ciudades: departamento[1]
+            this.departments.push({
+                Departamento: department[0],
+                Ciudades: department[1]
             });
 
-        }
-
-        // Elimino el primero elemento del array : Vacio
-        this.departamentos.shift();
-
-        console.log('Departamentos: ', this.departamentos);
-        this.states = this.departamentos;
+        });
 
     }
 
-    // Carga la Lista de los Departamentos y Ciudades Automáticamente
-    changeCountry(country) {
+    public changeDepartment(department: string): void {
+
+        console.log('depts in change: ', department);
+
         try {
-            this.cities = this.states.find(elemento => elemento.Departamento == country).Ciudades;
+
+            this.cities = this.departments.find(elemento => elemento.Departamento === department).Ciudades;
 
         } catch (error) {
             console.log('Error: ', error);
-
         }
     }
 
-    // Metodo que envia el formulario al Backend en Formato Json directamente
-    enviar(event: Event) {
+    public send(event: Event): void {
         // Cancelo el refresh nativo de html de toda la página
         event.preventDefault();
 
@@ -155,6 +125,23 @@ export class FormularioComponent implements OnInit {
             // Activo todos los errores en el formulario
             this.formulario.markAllAsTouched();
         }
+    }
+
+    // - Recuper los campos para que no sea tan repetitiva el llamado a dichos campos cuando trabaje con los errores
+    get departmentField() {
+        return this.formulario.get('department');
+    }
+
+    get cityField() {
+        return this.formulario.get('city');
+    }
+
+    get nameField() {
+        return this.formulario.get('name');
+    }
+
+    get emailField() {
+        return this.formulario.get('email');
     }
 
 }

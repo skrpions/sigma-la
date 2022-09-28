@@ -1,20 +1,17 @@
-<!-- en (ngSubmit)="enviar($event)" es necesario pasar el evento nativo de html para cancelarlo en ts y asi evitar que se recargue la página -->
-<!-- novalidate sirve para indicarle a HTML que no haga validaciones automáticas  -->
-
 <!-- Start :: Formulario -->
-<form [formGroup]="formulario" (ngSubmit)="enviar($event)" class="shadow" novalidate>
+<form [formGroup]="formulario" (ngSubmit)="send($event)" class="shadow" novalidate>
 
 
-    <!-- state -->
+    <!-- department -->
     <div class="form-group">
-        <label for="state">Departamento*</label>
-        <select formControlName="state" name="state" class="form-control" id="state"
-            (change)="changeCountry($event.target.value)">
+        <label for="department">Departamento*</label>
+        <select formControlName="department" name="department" class="form-control" id="department"
+            (change)="changeDepartment($event.target.value)">
             <option value=""> Seleccione Departamento</option>
-            <option *ngFor="let departs of states">{{departs.Departamento}}</option>
+            <option *ngFor="let department of departments">{{department.Departamento}}</option>
         </select>
-        <div *ngIf="stateField.errors && stateField.touched">
-            <p *ngIf="stateField.hasError('required')">
+        <div *ngIf="departmentField.errors && departmentField.touched">
+            <p *ngIf="departmentField.hasError('required')">
                 Selección Requerida *
             </p>
         </div>
