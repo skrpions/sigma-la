@@ -2,19 +2,20 @@
 <!-- novalidate sirve para indicarle a HTML que no haga validaciones automáticas  -->
 
 <!-- Start :: Formulario -->
-<form [formGroup]="formulario" (ngSubmit)="enviar($event)" class="shadow" novalidate >
+<form [formGroup]="formulario" (ngSubmit)="enviar($event)" class="shadow" novalidate>
 
 
     <!-- state -->
     <div class="form-group">
         <label for="state">Departamento*</label>
-        <select formControlName="state" name="state" class="form-control" id="state" (change)="changeCountry($event.target.value)">
+        <select formControlName="state" name="state" class="form-control" id="state"
+            (change)="changeCountry($event.target.value)">
             <option value=""> Seleccione Departamento</option>
-            <option *ngFor="let departs of states">{{departs.departamento}}</option>
+            <option *ngFor="let departs of states">{{departs.Departamento}}</option>
         </select>
         <div *ngIf="stateField.errors && stateField.touched">
             <p *ngIf="stateField.hasError('required')">
-              Selección Requerida *
+                Selección Requerida *
             </p>
         </div>
     </div>
@@ -41,10 +42,10 @@
         <span class="icon-left"><i class="fas fa-check-circle"></i></span>
         <span class="msj" *ngIf="nameField.errors && nameField.touched">
             <p *ngIf="nameField.hasError('required')">
-              Campo Requerido *
+                Campo Requerido *
             </p>
             <p *ngIf="nameField.hasError('maxlength')">
-              Te pasaste, máximo deben haber 50 caracteres.
+                Te pasaste, máximo deben haber 50 caracteres.
             </p>
         </span>
     </div>
@@ -52,15 +53,16 @@
     <!-- E-mail -->
     <div class="form-group">
         <label for="email">Correo*</label>
-        <input formControlName="email" type="email" class="form-control" id="email" placeholder="Pepitodejesus@gmail.com">
+        <input formControlName="email" type="email" class="form-control" id="email"
+            placeholder="Pepitodejesus@gmail.com">
         <span *ngIf="emailField.errors && emailField.touched">
             <p *ngIf="emailField.hasError('required')">
-              Campo Requerido *
+                Campo Requerido *
             </p>
             <p *ngIf="emailField.hasError('email')">
-              Este correo no es válido *
+                Este correo no es válido *
             </p>
-        </span>    
+        </span>
     </div>
 
     <!-- Enviar -->
