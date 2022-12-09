@@ -1,14 +1,13 @@
-import { ContactoService } from './../../Servicios/contacto.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ContactoService } from './../../Servicios/contacto.service';
 
 // debounceTime sirve para reaccionar después de un tiempo de inactividad dentro del formulario
-import { HttpClient } from '@angular/common/http';
 import { DepartamentosService } from '../../Servicios/departamentos.service';
 
 // Animación de SweetAlert2
 import Swal from 'sweetalert2';
-
+import { Departamento } from '../../Modelos/departamento';
 
 @Component({
     selector: 'app-formulario',
@@ -18,7 +17,7 @@ import Swal from 'sweetalert2';
 export class FormularioComponent implements OnInit {
 
     public formulario: FormGroup;
-    public departments: any[] = [];
+    public departments: Departamento[] = [];
     public cities: string[] = [];
 
     constructor(
@@ -51,10 +50,11 @@ export class FormularioComponent implements OnInit {
 
         try {
 
-            // Consumo de API REST :: Obtengo los datos de la url 
+            // Consumo de API REST :: Obtengo los datos de la url
             this._departamentosSvc.getDepartamentos().subscribe(Departments => {
 
-                this.loadDepartments(Object.entries(Departments));
+              console.log('✅ Object.entries(Departments) ', Object.entries(Departments));
+              this.loadDepartments(Object.entries(Departments));
 
             });
 
@@ -66,7 +66,8 @@ export class FormularioComponent implements OnInit {
 
     private loadDepartments(allDepartments: any): void {
 
-        allDepartments.map((department: any) => {
+        allDepartments.map((department: Departamento) => {
+          console.log('👉 department: ', department);
 
             this.departments.push({
                 Departamento: department[0],
@@ -74,6 +75,9 @@ export class FormularioComponent implements OnInit {
             });
 
         });
+
+      console.log('😉 this.departments: ', this.departments);
+
 
     }
 
@@ -131,7 +135,7 @@ export class FormularioComponent implements OnInit {
 
     }
 
-    // - Recuper los campos para que no sea tan repetitiva el llamado a dichos campos cuando trabaje con los errores
+    // - Recuperar los campos para que no sea tan repetitiva el llamado a dichos campos cuando trabaje con los errores
     get departmentField() {
         return this.formulario.get('department');
     }
